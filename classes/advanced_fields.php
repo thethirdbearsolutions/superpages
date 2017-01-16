@@ -620,7 +620,6 @@ $sp_notch = array (
 	'key' => 'field_549702895a444',
 	'label' => 'Add Top Notch',
 	'name' => 'sp-notch',
-	'type' => 'true_false',
 	'conditional_logic' => array (
 		'status' => 1,
 		'rules' => array (
@@ -632,6 +631,14 @@ $sp_notch = array (
 		),
 		'allorany' => 'all',
 	),
+	'type' => 'select',
+	'choices' => array (
+		'none' => 'None',
+		'notch' => 'Triangle',
+		'notch-semicircle' => 'Semi-circle',
+		'notch-tab' => 'Tab',
+	),
+	'default_value' => 'none',
 	'column_width' => '',
 	'message' => '',
 	'default_value' => 0,
