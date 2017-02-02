@@ -190,16 +190,16 @@ if (have_posts()) : while (have_posts()) : the_post();
 			$ak_postal_label = get_sub_field( 'sp-actionkit-postal-label' );
 			$ak_country = get_sub_field( 'sp-actionkit-country' );
 			$ak_country_label = get_sub_field( 'sp-actionkit-country-label' );
-			$ak_country_preselect = get_sub_field( 'sp-actionkit-country-preselect' );
 			$ak_confirm = get_sub_field( 'sp-actionkit-confirmation' );
 			$ak_custom = get_sub_field( 'sp-actionkit-custom' );
-			$ak_postformtext = get_sub_field( 'sp-actionkit-postformtext' );
 			$form_layout = get_sub_field('sp-actionkit-layout'); 
+			$ak_country_preselect = get_sub_field( 'sp-actionkit-country-preselect' );
+			$ak_postformtext = get_sub_field( 'sp-actionkit-postformtext' );
 			$lang = substr(get_locale(),0,2);
 			$form_classes = array();
 			if ( $form_layout == 'two-column' ){
 				$form_classes = array(
-					'section' => 'width-normal',
+					'section' => '',
 					'text' => 'c6 ct6',
 					'title' => 'title4',
 					'desc' => '',
@@ -207,7 +207,7 @@ if (have_posts()) : while (have_posts()) : the_post();
 				);
 			} else if ( $form_layout == 'three-column' ){
 				$form_classes = array(
-					'section' => 'width-wide',
+					'section' => '',
 					'text' => 'c6 ct6',
 					'title' => 'c3 title4',
 					'desc' => 'c7',
@@ -215,15 +215,15 @@ if (have_posts()) : while (have_posts()) : the_post();
 				);
 			} else if ( $form_layout == 'horizontal' ){
 				$form_classes = array(
-					'section' => 'width-full',
-					'text' => 'text-center left1 c8',
+					'section' => '',
+					'text' => 'margin-bottom-none',
 					'title' => '',
 					'desc' => '',
-					'form' => 'text-center',
+					'form' => '',
 				);
 			} else {
 				$form_classes = array(
-					'section' => 'width-narrow text-center',
+					'section' => '',
 					'text' => '',
 					'title' => '',
 					'desc' => '',
@@ -234,7 +234,7 @@ if (have_posts()) : while (have_posts()) : the_post();
 			// $input_select_class = ( get_sub_field('sp-actionkit-horizontal') ) ? "c2" : "input select";
 			// $input_submit_class = ( get_sub_field('sp-actionkit-horizontal') ) ? "c2" : " ";
 			?>
-		<div <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section actionkit <?php echo $classes; ?> <?php echo $form_classes['section']; ?>" id="<?php echo $id; ?>">
+	<div <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section actionkit <?php echo $classes; ?> <?php echo $form_classes['section']; ?>" id="<?php echo $id; ?>">
 		<div id="action-kit-inner" class="section-inner code-inner">
 			<div class="form-text <?php echo $form_classes['text']; ?>">
 				<?php if ( get_sub_field('sp-actionkit-title') ){ ?><h3 class="<?php echo $form_classes['title']; ?>"><?php echo get_sub_field('sp-actionkit-title'); ?></h3><?php } ?>
@@ -245,7 +245,7 @@ if (have_posts()) : while (have_posts()) : the_post();
 				<?php } ?>
 				<div class="clear"></div>
 			</div>
-			<form class="actionkit-widget form-style-labelabove <?php echo $form_classes['form']; ?>" name="signup" action="https://act.350.org/act/" onsubmit="this.submitted=1; return false;">
+			<form class="actionkit-widget form-layout-<?php echo $form_layout; ?> form-style-labelabove <?php echo $form_classes['form']; ?>" name="signup" action="https://act.350.org/act/" onsubmit="this.submitted=1; return false;">
 				<input type="hidden" name="page" value="<?=$akpage?>">
 			<?php if ($ak_name) { ?>
 				<div class="input-text input-name ak-input-type-user">
@@ -290,15 +290,15 @@ if (have_posts()) : while (have_posts()) : the_post();
 						?>
 					</select>
 				</div>
-			<?php if ($ak_phone) { ?>
+			<?php if ($ak_phone): ?>
 				<div class="input-text input-number input-phone ak-input-type-user">
 					<label for="ak-phone"><?php echo ( $ak_phone_label ) ? $ak_phone_label : "Phone Number";?></label>
 					<input value="" id="ak-phone" type="text" name="phone" /> 
 				</div>
-			<?php }; ?>
-			<?php if ($ak_custom){?>
+			<?php endif; ?>
+			<?php if ($ak_custom): ?>
 				<?php echo $ak_custom; ?>
-			<?php } ?>
+			<?php endif; ?>
 				<div class="input-submit">
 					<input class="submit" type="submit" value="<?php echo $ak_submit; ?>" onClick="ga('send','event', {eventCategory: 'email', eventAction: 'superpage-action', eventLabel: '<?php echo $akpage; ?>'});" >
 				</div>
@@ -307,14 +307,15 @@ if (have_posts()) : while (have_posts()) : the_post();
 					<?php echo $ak_postformtext; ?>
 				</div>
 			<?php endif; ?>
-			</form>
+		</form>
 		<?php } ?>
-			<div id="signup-replacement" class="box box-big text-large bg-white-trans <?php echo $form_classes['form']; ?>" style="display: none;">
-				<p><?php echo stripslashes($ak_confirm) ?></p>
-			</div>
-			<script src="https://act.350.org/samples/widget.js"></script>
-			</div>
-			<?php spBgImgCredit($bg_img_credit, $bg_img_credit_url); ?>
+		<div id="signup-replacement" class="box box-big text-large bg-white-trans <?php echo $form_classes['form']; ?>" style="display: none;">
+			<p><?php echo stripslashes($ak_confirm) ?></p>
+		</div>
+		<script src="https://act.350.org/samples/widget.js"></script>
+		</div>
+		<?php spBgImgCredit($bg_img_credit, $bg_img_credit_url); ?>
+	</div>	
 		</div>
 		<?php elseif(get_row_layout() == "sp-section-posts") : ?>
 			<?php 
@@ -352,15 +353,13 @@ if (have_posts()) : while (have_posts()) : the_post();
 						endwhile;
 					?>
 					<?php if ( $posts_per_page > 2 ): ?>
-					<div class="pagination">
-						<?php 
+					<div class="pagination"><?php 
 							$pagination_args = array(
 								'prev_text'          => __('← Newer','baseline'),
 								'next_text'          => __('Older →','baseline')
 							); 
-							echo paginate_links($pagination_args);
-						?>
-					</div>
+							echo trim( paginate_links($pagination_args) );
+						?></div>
 					<?php endif; ?>
 				</div>
 				<?php spBgImgCredit($bg_img_credit, $bg_img_credit_url); ?>
