@@ -370,19 +370,23 @@ if (have_posts()) : while (have_posts()) : the_post();
 			<?php $columns = get_sub_field('grid-square-columns'); ?>
 			<?php 
 				if( have_rows('grid-square') ): ?>
-				<div id="<?php echo $id; ?>" <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section img-grid <?php echo $classes; ?>">
+				<div id="<?php echo $id; ?>" <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section section-img-grid <?php echo $classes; ?>">
 					<div class="section-inner img-grid-inner">
 				    <?php while ( have_rows('grid-square') ) : the_row(); ?>
-					<?php 
-						$attachment_id = get_sub_field('grid-square-img');
-						$size = "grid-square"; // (thumbnail, medium, large, full or custom size)
-						$grid_img = wp_get_attachment_image_src($attachment_id, $size );
-						$grid_img_full = wp_get_attachment_image_src($attachment_id, 'full' );
-					?>
+						<?php 
+							$attachment_id = get_sub_field('grid-square-img');
+							$size = "grid-square-img"; // (thumbnail, medium, large, full or custom size)
+							$grid_img = wp_get_attachment_image_src($attachment_id, $size );
+							$grid_img_full = wp_get_attachment_image_src($attachment_id, 'full' );
+							$grid_img_preview = wp_get_attachment_image_src( $attachment_id , 'dataURI-preview' );
+							$grid_img_preview_data_uri = '';
+							if ( $grid_img_preview[0] && function_exists(getDataURI)){
+								$grid_img_preview_data_uri = getDataURI( $attachment_id );
+							}
+						?>
 					<div class="img-grid-square <?php echo $columns; ?>">
-				    	<a rel="image_grid" href="<?php ( the_sub_field('grid-square-link') ) ? the_sub_field('grid-square-link') : $grid_img_full[0]; ?>" class="<?php echo ( the_sub_field('grid-square-link') == '' ) ? "fancybox": ''; ?>">
-				    		<span class="img-grid-square-img">
-				    			
+				    	<a rel="image_grid" href="<?php !empty( the_sub_field('grid-square-link') ) ? the_sub_field('grid-square-link') : $grid_img_full[0]; ?>" class="img-grid-square-link image-link-parent bg-size-cover <?php echo !empty( get_sub_field('grid-square-link') ) ? "fancybox" : ''; ?>" style="background-image:url(<?php echo $grid_img_preview_data_uri; ?>)">
+				    		<span class="img-grid-square-img image-link-parent">
 								<img data-src="<?php echo $grid_img[0] ?>" class="lazy" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/>
 								<noscript>
 									<img class="img-grid-square-nojs-image" src="<?php echo $grid_img[0] ?>"/>
@@ -409,17 +413,44 @@ if (have_posts()) : while (have_posts()) : the_post();
 			?>
 
 		<?php elseif(get_row_layout() == "sp-section-nav") : ?>
-			<?php 
-				$navslug = get_sub_field("sp-section-navslug"); 
-				$menu_object = wp_get_nav_menu_object( $navslug );
-				$menu_array = get_object_vars( $menu_object );
-				$nav_label = $menu_array['name'];
-				$nav_mobile_display = !empty( get_sub_field('sp-nav-mobile-display') ) ? get_sub_field('sp-nav-mobile-display') : 'nav-mobile-select';
-				$nav_tablet_display = !empty( get_sub_field('sp-nav-tablet-display') ) ? get_sub_field('sp-nav-tablet-display') : 'nav-tablet-select' ;
+			<?php
+				// check for custom nav menu 
+				$nav_menu_source = get_sub_field("sp-nav-menu-source");
+				if ( $nav_menu_source == "nav-menu-custom" ):
+					$nav_custom_menu_name = get_sub_field("sp-nav-menu-label");
+				// else look for a menu in the WP menu system 
+				// (this is the fallback since the custom one-off menu feature was added later)
+				else: 
+					$navslug = get_sub_field("sp-section-navslug"); 
+					if ( $navslug ):
+						$menu_object = wp_get_nav_menu_object( $navslug );
+						$menu_array = get_object_vars( $menu_object );
+						$nav_label = $menu_array['name'];
+					endif;
+				endif;
+				// Get display options
+				$nav_mobile_display = !empty( get_sub_field('sp-nav-mobile-display') ) ? get_sub_field('sp-nav-mobile-display') : 'nav-mobile-list';
+				$nav_tablet_display = !empty( get_sub_field('sp-nav-tablet-display') ) ? get_sub_field('sp-nav-tablet-display') : 'nav-tablet-list' ;
 				$nav_desktop_display = !empty( get_sub_field('sp-nav-desktop-display') ) ? get_sub_field('sp-nav-desktop-display') : 'nav-desktop-dropdown';
 			?>
 			<nav <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section nav text-center <?php echo $classes; ?> <?php echo $nav_mobile_display; ?> <?php echo $nav_tablet_display; ?> <?php echo $nav_desktop_display; ?>" id="<?php echo $id; ?>" data-nav-label="<?php echo $nav_label; ?>">
 				<div class="section-inner nav-inner">
+					<?php // if menu source is set to "custom" and it has menu items... 
+						if ( ( $nav_menu_source == "nav-menu-custom" ) && have_rows('sp-nav-menu-items') ): 
+					?>
+					<ul class="menu">
+						<?php if ( $nav_custom_menu_name ): ?>
+						<li class="nav-menu-label text-font-secondary"><a><?php echo $nav_custom_menu_name; ?></a></li>
+						<?php endif; ?>
+						<?php // loop through the rows of data
+						    while ( have_rows('sp-nav-menu-items') ) : the_row();
+						?>
+						<li><a href="<?php the_sub_field('sp-nav-menu-item-url'); ?>" class="<?php the_sub_field('sp-nav-menu-item-classes'); ?>"><?php the_sub_field('sp-nav-menu-item-label'); ?></a></li>
+						<?php
+						    endwhile;
+						?>
+					</ul>
+					<?php else: ?>
 					<h4 class="meta nav-label"><?php echo $nav_label; ?></h4>
 					<?php 
 						wp_nav_menu(array(
@@ -428,6 +459,7 @@ if (have_posts()) : while (have_posts()) : the_post();
 							'fallback_cb' => '',
 						));
 					?>
+					<?php endif; ?>
 				</div>
 			</nav>
 		<?php elseif(get_row_layout() == "sp-section-sidebar") : ?>
