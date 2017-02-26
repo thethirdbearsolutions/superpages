@@ -693,6 +693,28 @@ $sp_css_class = array (
 	'formatting' => 'html',
 	'maxlength' => '',
 );
+$sp_addl_attributes = array (
+	'key' => 'field_439b29a14720',
+	'label' => 'Other Attributes',
+	'name' => 'sp-addl-attributes',
+	'type' => 'text',
+	'conditional_logic' => array (
+		'status' => 1,
+		'rules' => array (
+			array (
+				'field' => 'field_5496fea74a333',
+				'operator' => '==',
+				'value' => '1',
+			),
+		),
+		'allorany' => 'all',
+	),
+	'default_value' => '',
+	'placeholder' => '',
+	'prepend' => '',
+	'append' => '',
+	'maxlength' => '',
+);
 
 // If News Ticker plugin is active, add "Ticker" section type
 $ticker_section_array = array();
@@ -724,7 +746,8 @@ if ( is_plugin_active( 'ditty-news-ticker/ditty-news-ticker.php' ) ){
 			$sp_margins,
 			$sp_notch,
 			$sp_id,
-			$sp_css_class
+			$sp_css_class,
+			$sp_addl_attributes
 		),
 	);
 }
@@ -821,7 +844,8 @@ if ( function_exists( "register_field_group" ) )
 							$sp_margins,
 							$sp_notch,
 							$sp_id,
-							$sp_css_class
+							$sp_css_class,
+							$sp_addl_attributes
 						),
 					),
 					array (
@@ -855,7 +879,8 @@ if ( function_exists( "register_field_group" ) )
 							$sp_margins,
 							$sp_notch,
 							$sp_id,
-							$sp_css_class
+							$sp_css_class,
+							$sp_addl_attributes
 						),
 					),
 					array (
@@ -913,7 +938,8 @@ if ( function_exists( "register_field_group" ) )
 							$sp_margins,
 							$sp_notch,
 							$sp_id,
-							$sp_css_class
+							$sp_css_class,
+							$sp_addl_attributes
 						),
 					),					
 					array (
@@ -962,7 +988,8 @@ if ( function_exists( "register_field_group" ) )
 							$sp_margins,
 							$sp_notch,
 							$sp_id,
-							$sp_css_class
+							$sp_css_class,
+							$sp_addl_attributes
 						),
 					),
 					array (
@@ -1180,7 +1207,8 @@ if ( function_exists( "register_field_group" ) )
 							$sp_width,
 							$sp_notch,
 							$sp_id,
-							$sp_css_class	
+							$sp_css_class,
+							$sp_addl_attributes
 						),
 					),
 					array (
@@ -1295,7 +1323,8 @@ if ( function_exists( "register_field_group" ) )
 							$sp_margins,
 							$sp_notch,
 							$sp_id,
-							$sp_css_class
+							$sp_css_class,
+							$sp_addl_attributes
 						),
 					),
 					$ticker_section_array,
