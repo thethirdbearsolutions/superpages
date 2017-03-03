@@ -1008,9 +1008,9 @@ if ( function_exists( "register_field_group" ) )
 								'column_width' => '',
 								'choices' => array (
 									'nav-menu-custom' => 'Custom One-off Menu',
-									'nav-menu-wp' => 'Wordpress Menu',
+									'nav-menu-wp' => 'Wordpress Menu System',
 								),
-								'default_value' => 'nav-menu-custom',
+								'default_value' => 'nav-menu-wp',
 								'allow_null' => 0,
 								'multiple' => 0,
 							),

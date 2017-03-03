@@ -111,9 +111,10 @@ if (have_posts()) : while (have_posts()) : the_post();
 				return false;
 			}
 		}
-
+		$i = 0;
 		if( have_rows( "sp-sections" ) ): while( have_rows( "sp-sections" ) ): the_row(); 
-		$id = get_sub_field("sp-id");
+		$i++;
+		$id = !empty( get_sub_field("sp-id") ) ? get_sub_field("sp-id") : 'section_' . $i;
 		$classes = get_sub_field("sp-css-classes");
 		$addl_attributes = get_sub_field("sp-addl-attributes");
 		$bgcolor = get_sub_field("sp-bg-color");
@@ -172,7 +173,11 @@ if (have_posts()) : while (have_posts()) : the_post();
 
 			<?php $akpage = get_sub_field( 'sp-section-actionkit' ); ?>
 				<?php if ($akpage == '') { ?>
-					<p class="bg-white text-center"><strong>Error:</strong> Insert your ActionKit Page ID in the widget settings to activate this form.</p>
+				<div class="section bg-white padding-normal text-center">
+					<div class="section-inner">
+						<p><strong>Site Admin:</strong> Insert your ActionKit Page ID in the widget settings to activate this form.</p>
+					</div>
+				</div>
 				<?php }else{ 
 			$ak_title = get_sub_field( 'sp-actionkit-title' );
 			$ak_intro =  get_sub_field( 'sp-actionkit-intro' );
@@ -415,19 +420,14 @@ if (have_posts()) : while (have_posts()) : the_post();
 
 		<?php elseif(get_row_layout() == "sp-section-nav") : ?>
 			<?php
-				// check for custom nav menu 
+				// get nav menu settings
 				$nav_menu_source = get_sub_field("sp-nav-menu-source");
-				if ( $nav_menu_source == "nav-menu-custom" ):
-					$nav_custom_menu_name = get_sub_field("sp-nav-menu-label");
-				// else look for a menu in the WP menu system 
-				// (this is the fallback since the custom one-off menu feature was added later)
-				else: 
-					$navslug = get_sub_field("sp-section-navslug"); 
-					if ( $navslug ):
-						$menu_object = wp_get_nav_menu_object( $navslug );
-						$menu_array = get_object_vars( $menu_object );
-						$nav_label = $menu_array['name'];
-					endif;
+				$nav_custom_menu_name = get_sub_field("sp-nav-menu-label");
+				$navslug = get_sub_field("sp-section-navslug"); 
+				if ( $navslug ):
+					$menu_object = wp_get_nav_menu_object( $navslug );
+					$menu_array = get_object_vars( $menu_object );
+					$nav_label = $menu_array['name'];
 				endif;
 				// Get display options
 				$nav_mobile_display = !empty( get_sub_field('sp-nav-mobile-display') ) ? get_sub_field('sp-nav-mobile-display') : 'nav-mobile-list';
@@ -439,9 +439,9 @@ if (have_posts()) : while (have_posts()) : the_post();
 					<?php // if menu source is set to "custom" and it has menu items... 
 						if ( ( $nav_menu_source == "nav-menu-custom" ) && have_rows('sp-nav-menu-items') ): 
 					?>
-					<ul class="menu">
+					<ul class="menu custom-menu">
 						<?php if ( $nav_custom_menu_name ): ?>
-						<li class="nav-menu-label text-font-secondary"><a><?php echo $nav_custom_menu_name; ?></a></li>
+						<li class="nav-menu-label text-font-secondary text-caps"><a><?php echo $nav_custom_menu_name; ?></a></li>
 						<?php endif; ?>
 						<?php // loop through the rows of data
 						    while ( have_rows('sp-nav-menu-items') ) : the_row();
