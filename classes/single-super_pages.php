@@ -44,7 +44,6 @@ function tfArrayifyParams($params_string){
 if (have_posts()) : while (have_posts()) : the_post(); 
 // post_password_required adds support for Password protection
 	if ( !post_password_required() ): ?>
-<section id="content" class="superpage">
 	<style>
 		<?php 
 			$showHeader = get_field("sp-show-header");
@@ -74,7 +73,7 @@ if (have_posts()) : while (have_posts()) : the_post();
 				background-image:url('<?php echo $sp_bg_large[0]; ?>') !important;}
 		}
 		<?php 
-			elseif ($spBgChoice == 'none') :
+			elseif ($spBgChoice == 'none' || $spBgChoice == 'color') :
 		?>
 		#body-mobile-background{
 			background:transparent !important;}
@@ -322,7 +321,6 @@ if (have_posts()) : while (have_posts()) : the_post();
 		</div>
 		<?php spBgImgCredit($bg_img_credit, $bg_img_credit_url); ?>
 	</div>	
-		</div>
 		<?php elseif(get_row_layout() == "sp-section-posts") : ?>
 			<?php 
 				$sp_content_custom_args = tfArrayifyParams( get_sub_field('sp-posts-query-params', false ) );
@@ -332,13 +330,14 @@ if (have_posts()) : while (have_posts()) : the_post();
 				);
 				$sp_content_args = wp_parse_args( $sp_content_custom_args, $sp_content_default_args );
 				$sp_content_query = new WP_query( $sp_content_args );
+				$sp_content_after = get_sub_field('sp-posts-content-after');
+				$post_count = 0;
 			?>
 			<?php if ($sp_content_query->have_posts()) : ?>
 			<div <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section posts <?php echo $classes; ?>" id="<?php echo $id; ?>" <?php echo $addl_attributes; ?> >
 				<div class="section-inner posts-inner">
 					<?php if ( get_sub_field('sp-section-title') ): ?>
-						<h3 class="section-title meta c10"><?php echo get_sub_field('sp-section-title'); ?></h3>
-						<div class="clear"></div>
+						<h3 class="section-title meta c10 margin-bottom-medium"><?php echo get_sub_field('sp-section-title'); ?></h3>
 					<?php endif; ?>
 					<?php 
 						while ($sp_content_query->have_posts()) : $sp_content_query->the_post();
@@ -358,7 +357,11 @@ if (have_posts()) : while (have_posts()) : the_post();
 							endif;
 						endwhile;
 					?>
-					<?php if ( $posts_per_page > 2 ): ?>
+					<?php if ( $sp_content_after ): ?>
+					<div class="content-more">
+						<?php echo $sp_content_after; ?>
+					</div>	
+					<?php elseif ( ($sp_content_args['post_type'] == "post") && ($posts_per_page > 2 )): ?>
 					<div class="pagination"><?php 
 							$pagination_args = array(
 								'prev_text'          => __('← Newer','baseline'),
@@ -434,7 +437,7 @@ if (have_posts()) : while (have_posts()) : the_post();
 				$nav_tablet_display = !empty( get_sub_field('sp-nav-tablet-display') ) ? get_sub_field('sp-nav-tablet-display') : 'nav-tablet-list' ;
 				$nav_desktop_display = !empty( get_sub_field('sp-nav-desktop-display') ) ? get_sub_field('sp-nav-desktop-display') : 'nav-desktop-dropdown';
 			?>
-			<nav <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section nav text-center <?php echo $classes; ?> <?php echo $nav_mobile_display; ?> <?php echo $nav_tablet_display; ?> <?php echo $nav_desktop_display; ?>" id="<?php echo $id; ?>" data-nav-label="<?php echo $nav_label; ?>" <?php echo $addl_attributes; ?> >
+			<nav <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section nav <?php echo $classes; ?> <?php echo $nav_mobile_display; ?> <?php echo $nav_tablet_display; ?> <?php echo $nav_desktop_display; ?>" id="<?php echo $id; ?>" data-nav-label="<?php echo $nav_label; ?>" <?php echo $addl_attributes; ?> >
 				<div class="section-inner nav-inner">
 					<?php // if menu source is set to "custom" and it has menu items... 
 						if ( ( $nav_menu_source == "nav-menu-custom" ) && have_rows('sp-nav-menu-items') ): 
@@ -479,8 +482,6 @@ if (have_posts()) : while (have_posts()) : the_post();
 	endif; // end ACF flex field loop
 	
 	?>
-	
-</section>
 
 <?php 
 else:
