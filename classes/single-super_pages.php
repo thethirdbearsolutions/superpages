@@ -339,23 +339,19 @@ if (have_posts()) : while (have_posts()) : the_post();
 					<?php if ( get_sub_field('sp-section-title') ): ?>
 						<h3 class="section-title meta c10 margin-bottom-medium"><?php echo get_sub_field('sp-section-title'); ?></h3>
 					<?php endif; ?>
-					<?php 
-						while ($sp_content_query->have_posts()) : $sp_content_query->the_post();
-							// check if post_type query parameter is set and if so, use that template part:
-							$post_type_param = $sp_content_args['post_type'];
-							$posts_per_page = intval( $sp_content_args["posts_per_page"] );
-							// default to "list view" template for content
-							$post_template = "content";
-							// if only displaying one post, use "single" template
-							if ( $posts_per_page < 2 && $posts_per_page > 0):
-								$post_template = "content_single";
-							endif;
-							if ( $post_type_param ):
-								get_template_part( $post_template, $post_type_param );
-							else: 
-								get_template_part( $post_template,'post');
-							endif;
-						endwhile;
+						<?php 
+							while ($sp_content_query->have_posts()) : $sp_content_query->the_post();
+								$post_count++;
+								// check if post_type query parameter is set and if so, use that template part:
+								$post_type_param = $sp_content_args['post_type'];
+								if ( $post_type_param ){
+									include(locate_template('content-' . $post_type_param . '.php'));
+									// get_template_part('content', $post_type_param );
+								} else {
+									include(locate_template('content-post.php'));
+									// get_template_part('content','post');
+								}
+							endwhile;
 					?>
 					<?php if ( $sp_content_after ): ?>
 					<div class="content-more">
