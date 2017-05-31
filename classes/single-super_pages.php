@@ -340,25 +340,28 @@ if (have_posts()) : while (have_posts()) : the_post();
 					} else{
 						$layout_class = ' posts-layout-list';
 					}
+
 				?>			
 				<div <?php spBgImg($bg_attachment_id, $bg_img_attach); ?> class="section posts <?php echo $classes . $layout_class; ?>" id="<?php echo $id; ?>" <?php echo $addl_attributes; ?> >
 				<div class="section-inner posts-inner">
 					<?php if ( get_sub_field('sp-section-title') ): ?>
 						<h3 class="section-title meta c10 margin-bottom-medium"><?php echo get_sub_field('sp-section-title'); ?></h3>
 					<?php endif; ?>
-						<?php 
-							while ($sp_content_query->have_posts()) : $sp_content_query->the_post();
-								$post_count++;
-								// check if post_type query parameter is set and if so, use that template part:
-								$post_type_param = $sp_content_args['post_type'];
-								if ( $post_type_param ){
-									include(locate_template('content-' . $post_type_param . '.php'));
-									// get_template_part('content', $post_type_param );
-								} else {
-									include(locate_template('content-post.php'));
-									// get_template_part('content','post');
-								}
-							endwhile;
+					<?php 
+						while ($sp_content_query->have_posts()) : $sp_content_query->the_post();
+							$post_count++;
+							// check if post_type query parameter is set and if so, use that template part:
+							$post_type_param = $sp_content_args['post_type'];
+							$post_number = $sp_content_args['posts_per_page'];
+							if ( $post_type_param && ( $post_number == 1 ) ):
+								include(locate_template('content_single-' . $post_type_param . '.php'));
+							elseif ( $post_type_param ):
+								include(locate_template('content-' . $post_type_param . '.php'));
+							else:
+								include(locate_template('content-post.php'));
+								// get_template_part('content','post');
+							endif;
+						endwhile;
 					?>
 					<?php if ( $sp_content_after ): ?>
 					<div class="content-more">
