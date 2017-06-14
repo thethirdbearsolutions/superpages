@@ -3,10 +3,10 @@
 Plugin Name: Super Pages
 Plugin URI: http://walihassan.com
 Description: Super Pages Plugin
-Version: 1.1.4
+Version: 1.1.5
 Author: Wali Hassan, Matthew Anderson
 Author URI: http://walihassan.com
-GitHub Plugin URI: https://github.com/matthew-350/superpages
+GitHub Plugin URI: https://github.com/350org/superpages
 GitHub Branch: master
 */
 // Define urls/paths that will be used throughout the plugin
