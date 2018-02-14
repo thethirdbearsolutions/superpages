@@ -3,7 +3,7 @@
 Plugin Name: Super Pages
 Plugin URI: http://walihassan.com
 Description: Super Pages Plugin
-Version: 1.1.7
+Version: 1.2.0
 Author: Wali Hassan, Matthew Anderson
 Author URI: http://walihassan.com
 GitHub Plugin URI: https://github.com/350org/superpages
